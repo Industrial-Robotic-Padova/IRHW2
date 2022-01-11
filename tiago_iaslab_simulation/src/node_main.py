@@ -105,3 +105,4 @@ if __name__ == "__main__":
     hw2 = HW2()
     pose_table = ()
     hw2.move_to_table(pose_table)
+    hw2.pick(object_pose=(), possible_grasps=[])
