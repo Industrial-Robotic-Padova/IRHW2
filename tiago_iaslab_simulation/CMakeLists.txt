@@ -10,7 +10,6 @@ project(tiago_iaslab_simulation)
 find_package(catkin REQUIRED
   actionlib
   actionlib_msgs
-  message_generation
   roscpp
   gazebo_ros
   std_msgs
@@ -154,11 +153,11 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(
+#target_link_libraries(
 #  human_node
-  ${catkin_LIBRARIES}
+#  ${catkin_LIBRARIES}
 #  ${PROJECT_NAME}_human
-)
+#)
 #############
 ## Install ##
 #############
