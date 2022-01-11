@@ -13,7 +13,6 @@ find_package(catkin REQUIRED
   message_generation
   roscpp
   gazebo_ros
-  rospy
   std_msgs
   message_generation
 )
@@ -110,7 +109,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES tiago_iaslab_simulation
-   CATKIN_DEPENDS roscpp std_msgs message_runtime rospy actionlib actionlib_msgs
+   CATKIN_DEPENDS roscpp std_msgs message_runtime actionlib actionlib_msgs
 #  DEPENDS system_lib
 )
 
