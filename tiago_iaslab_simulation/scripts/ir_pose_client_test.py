@@ -19,6 +19,6 @@ if __name__ == '__main__':
     try:
         rospy.init_node('ir_pose_client_test')
         result = ir_pose_client([8, 0, 0])
-        print("Result:", ', '.join([str(n) for n in result.sequence]))
+        print("Result:", result.status)
     except rospy.ROSInterruptException:
         print("program interrupted before completion")
