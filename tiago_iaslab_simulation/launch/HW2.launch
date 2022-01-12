@@ -2,5 +2,5 @@
   <node pkg="tiago_iaslab_simulation" name="ir_pose_server" type="ir_pose_server.py" output="screen"></node>
   <node pkg="tiago_iaslab_simulation" name="ir_pose_client_test" type="ir_pose_client_test.py" output="screen"></node>
 
-  <node pkg="tiago_iaslab_simulation" name="human_node" type="Human_node"/>
+  <node pkg="tiago_iaslab_simulation" name="Human_node" type="Human_node"/>
 </launch>
