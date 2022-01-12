@@ -31,7 +31,7 @@
       <arg name="public_sim"     value="$(arg public_sim)"/>
       <arg name="rgbd_sensors"   value="$(arg advanced_navigation)"/>
       <arg name="laser_model"    value="$(arg laser_model)"/>
-      <arg name="base_type"      value="$(arg base_type)"/>
+     <!-- <arg name="base_type"      value="$(arg base_type)"/> -->
     </include>
 
   </group>
