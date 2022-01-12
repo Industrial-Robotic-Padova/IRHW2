@@ -34,8 +34,8 @@ class ActionServer:
         goal.target_pose.pose.orientation.z = Rz
         goal.target_pose.pose.orientation.w = 0.66
 
-        # client.send_goal(goal, feedback_cb=feedback_callback)
-        # client.wait_for_result()
+        client.send_goal(goal, feedback_cb=feedback_callback)
+        client.wait_for_result()
         print('GOAL:', goal)
 
         print('[Result] State: %d' % (client.get_state()))
