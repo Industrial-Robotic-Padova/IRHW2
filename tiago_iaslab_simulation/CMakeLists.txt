@@ -158,6 +158,7 @@ target_link_libraries(
   ${catkin_LIBRARIES}
   ${PROJECT_NAME}_human
 )
+add_dependencies(Human_node ${catkin_EXPORTED_TARGETS})
 #############
 ## Install ##
 #############
