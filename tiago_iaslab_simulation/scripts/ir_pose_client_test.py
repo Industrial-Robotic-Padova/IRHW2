@@ -26,7 +26,7 @@ robot_size = 0.7
 
 
 def pose_calc(obj_str):
-    return coords.get(obj_str)[0] - coords.get('base')[0], coords.get(obj_str)[1] - coords.get('base')[1]
+    return coords.get(obj_str)[0] - coords.get('base')[0], coords.get(obj_str)[1] - coords.get('base')[1], 0.68
 
 
 def pose_calc_cyl(obj_str):
@@ -37,7 +37,7 @@ def pose_calc_table(angle):
     pose_table = list(pose_calc('table'))
     if angle == 1:
         pose_table[1] -= (table_size + robot_size/2)
-        pose_table.append(-0.68)
+        pose_table[2] = -0.68
     return tuple(pose_table)
 
 
