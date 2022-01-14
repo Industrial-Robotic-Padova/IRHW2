@@ -77,7 +77,7 @@ if __name__ == '__main__':
         for id_ in ids_:
             send_pose(pose_calc_table(angle=1))
             # pick
-            send_pose(pose_calc(str(id_)))
+            send_pose(pose_calc_cyl(str(id_)))
             # put
 
     except rospy.ROSInterruptException:
