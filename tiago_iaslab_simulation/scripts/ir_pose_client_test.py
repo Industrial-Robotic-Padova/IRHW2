@@ -14,6 +14,31 @@ positions_ = {
     '2': (11.5, 0.75, -0.9),
     '3': (12.5, 0.75, -0.9),
 }
+coords = {
+    'base': (-6.580047, 1.369940),
+    'table': (1.245143, -1.613171),
+    '1': (4.007396, 1.015966),
+    '2': (5.007404, 1.015966),
+    '3': (6.007146, 1.015966),
+}
+table_size = 0.913
+robot_size = 0.7
+
+
+def pose_calc(obj_str):
+    return coords.get(obj_str)[0] - coords.get('base')[0], coords.get(obj_str)[1] - coords.get('base')[1]
+
+
+def pose_calc_cyl(obj_str):
+    pass
+
+
+def pose_calc_table(angle):
+    pose_table = pose_calc('table')
+    if angle == 1:
+        pose_table[1] -= (table_size + robot_size/2)
+        pose_table = pose_table.__add__((-0.68,))
+    return pose_table
 
 
 def send_pose(pos):
@@ -45,9 +70,9 @@ if __name__ == '__main__':
         ids_ = get_obj_ids()
         print("ids:", result)
         for id_ in ids_:
-            send_pose(positions_.get('table'))
+            send_pose(pose_calc_table(angle=1))
             # pick
-            send_pose(positions_.get(str(id_)))
+            send_pose(pose_calc(str(id_)))
             # put
 
     except rospy.ROSInterruptException:
