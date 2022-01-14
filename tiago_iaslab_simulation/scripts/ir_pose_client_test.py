@@ -34,11 +34,11 @@ def pose_calc_cyl(obj_str):
 
 
 def pose_calc_table(angle):
-    pose_table = pose_calc('table')
+    pose_table = list(pose_calc('table'))
     if angle == 1:
         pose_table[1] -= (table_size + robot_size/2)
-        pose_table = pose_table.__add__((-0.68,))
-    return pose_table
+        pose_table = pose_table.append(-0.68)
+    return tuple(pose_table)
 
 
 def send_pose(pos):
