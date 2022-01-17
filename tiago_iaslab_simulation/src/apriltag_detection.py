@@ -6,7 +6,7 @@ from  apriltag_ros.msg import AprilTagDetectionArray
 
 
 def tag_callback(msg):
-    print('ID:',  msg.detections[0].id)
+    print( msg)
     print('FINAL POSES: ', msg.detections[0].pose.pose.pose.position)
 
 
