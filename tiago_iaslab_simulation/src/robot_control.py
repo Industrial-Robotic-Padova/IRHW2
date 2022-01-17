@@ -34,7 +34,7 @@ class PointHeadClient(object):
         rospy.loginfo("Done initializing PickAruco.")
         self.move_head()
         self.move_torso()
-        self.open_arm()
+        #self.open_arm()
         pmg = PlayMotionGoal()
         pmg.motion_name = 'pick_final_pose'
         pmg.skip_planning = False
