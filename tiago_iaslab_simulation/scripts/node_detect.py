@@ -50,8 +50,7 @@ class DetectActionServer:
 
 
 def callback_image(img_msg):
-    rospy.loginfo(img_msg.header)
-
+    # rospy.loginfo(img_msg.header)
     try:
         cv_image = bridge.imgmsg_to_cv2(img_msg, "passthrough")
         cv2.imshow("Image Window", cv_image)
