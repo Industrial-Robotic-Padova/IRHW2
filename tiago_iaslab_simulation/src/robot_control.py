@@ -65,8 +65,8 @@ class PointHeadClient(object):
         jt = JointTrajectory()
         jt.joint_names = ['arm_1_joint', 'arm_2_joint', 'arm_3_joint', 'arm_4_joint', 'arm_5_joint', 'arm_6_joint', 'arm_7_joint']
         jtp = JointTrajectoryPoint()
-        jtp.positions = [2.5, 0.2, -2.1, 1.9, 1.0, -0.5, 0.0]
-        #jtp.positions = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        #jtp.positions = [2.5, 0.2, -2.1, 1.9, 1.0, -0.5, 0.0]
+        jtp.positions = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         jtp.time_from_start = rospy.Duration(2.0)
         jt.points.append(jtp)
         self.arm_cmd.publish(jt)
