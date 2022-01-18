@@ -63,10 +63,10 @@ def callback_image(img_msg):
 def callback_tag(msg):
     global g_detects
     g_detects = {i.id: i.pose.pose for i in msg.detections}
-    print('tag_callback', g_detects)
+    print("tag_callback", g_detects)
 
 
-def tf_callback_(object_pose: PoseStamped):
+def tf_callback_(object_pose):
     tfBuffer = tf2_ros.Buffer()
 
     while True:
