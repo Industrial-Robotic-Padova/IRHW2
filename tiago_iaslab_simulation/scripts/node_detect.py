@@ -52,9 +52,10 @@ class DetectActionServer:
 def callback_image(img_msg):
     # rospy.loginfo(img_msg.header)
     try:
-        cv_image = bridge.imgmsg_to_cv2(img_msg, "passthrough")
-        cv2.imshow("Image Window", cv_image)
-        cv2.waitKey(3)
+        pass
+        # cv_image = bridge.imgmsg_to_cv2(img_msg, "passthrough")
+        # cv2.imshow("Image Window", cv_image)
+        # cv2.waitKey(3)
     except CvBridgeError as e:
         rospy.logerr("CvBridge Error: {0}".format(e))
 

@@ -17,7 +17,11 @@ class ActionServer:
         rate = rospy.Rate(1)
 
         def feedback_callback(feedback):
-            print('[Feedback] Going to Goal Pose...', feedback.base_position.pose.position)
+            print('[Feedback] Going to Goal Pose...',
+                  feedback.base_position.pose.position.x,
+                  feedback.base_position.pose.position.y,
+                  feedback.base_position.pose.orientation.z,
+                  )
 
         client = actionlib.SimpleActionClient('/move_base', move_base_msgs.MoveBaseAction)
         client.wait_for_server()
@@ -32,7 +36,7 @@ class ActionServer:
         goal.target_pose.pose.orientation.x = 0.0
         goal.target_pose.pose.orientation.y = 0.0
         goal.target_pose.pose.orientation.z = Rz
-        goal.target_pose.pose.orientation.w = 0.66
+        goal.target_pose.pose.orientation.w = 1
 
         client.send_goal(goal, feedback_cb=feedback_callback)
         client.wait_for_result()
