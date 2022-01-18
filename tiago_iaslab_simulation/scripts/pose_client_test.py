@@ -5,7 +5,7 @@ import sys
 import rospy
 import actionlib
 
-from tiago_iaslab_simulation.msg import IRMoveAction, IRMoveGoal, IRMoveFeedback, IRMoveResult
+from tiago_iaslab_simulation import msg as ir_msg
 from tiago_iaslab_simulation.srv import Objs
 
 positions_ = {
@@ -56,10 +56,10 @@ def pose_calc_table(angle):
 
 
 def send_pose(pos):
-    client = actionlib.SimpleActionClient('/ir_pose', IRMoveAction)
+    client = actionlib.SimpleActionClient('/ir_pose', ir_msg.IRMoveAction)
     client.wait_for_server()
 
-    goal = IRMoveGoal(position=pos)
+    goal = ir_msg.IRMoveGoal(position=pos)
     client.send_goal(goal)
     client.wait_for_result()
     return client.get_result()
@@ -76,6 +76,19 @@ def get_obj_ids():
         print("Service call failed: %s" % e)
 
 
+def get_obj_pose(obj_id):
+    client = actionlib.SimpleActionClient('/ir_detect', ir_msg.IRDetectAction)
+    client.wait_for_server()
+
+    def detect_feedback_callback(feedback):
+        print("detect_feedback_callback", feedback)
+
+    goal = ir_msg.IRDetectGoal(object_tag=obj_id)
+    client.send_goal(goal, feedback_cb=detect_feedback_callback)
+    client.wait_for_result()
+    return client.get_result()
+
+
 if __name__ == '__main__':
     try:
         rospy.init_node('ir_pose_client_test')
@@ -85,8 +98,10 @@ if __name__ == '__main__':
         print("ids:", result)
         for id_ in ids_:
             send_pose(pose_calc_table(angle=1))
+            obj_pos = get_obj_pose(id_)
+            print(obj_pos)
             # pick
-            send_pose(pose_calc_cyl(str(id_)))
+            # send_pose(pose_calc_cyl(str(id_)))
             # put
 
     except rospy.ROSInterruptException:
