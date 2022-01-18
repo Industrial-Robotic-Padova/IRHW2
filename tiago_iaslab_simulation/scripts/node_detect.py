@@ -45,7 +45,7 @@ class DetectActionServer:
             feedback.status = 1
         result.position = []
         feedback.status = -1
-        print(f'[Result] detect result: {result.position}')
+        print(f'[Result] detect result:', result)
         self.a_server.set_succeeded(result)
 
 
