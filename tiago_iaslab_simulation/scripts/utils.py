@@ -32,13 +32,13 @@ def pose_calc_table(angle):
     if angle == 1:
         pose_table[0] += table_size
         pose_table.append(-1.57)  # pi/2
-    if angle == 2:
+    elif angle == 2:
         pose_table[0] -= table_size
         pose_table.append(1.57)
-    if angle == 3:
+    elif angle == 3:
         pose_table[1] += table_size
         pose_table.append(0)
-    if angle == 4:
+    elif angle == 4:
         pose_table[1] -= table_size
         pose_table.append(3.14)
 
