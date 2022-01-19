@@ -58,10 +58,12 @@ if __name__ == '__main__':
             # Do for each object
 
             # Check on the table:
-            for angle in [1, 2, 3, 4]:
+            for angle in [1, 3, 4]:
                 send_pose(pose_calc_table(angle=angle))
                 obj_pos = get_obj_pose(id_)
-            print(obj_pos)
+                if len(obj_pos) != 0:
+                    print('FINAL: ', obj_pos)
+                    break
             # pick
             # send_pose(pose_calc_cyl(str(id_)))
             # put

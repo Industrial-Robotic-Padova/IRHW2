@@ -43,7 +43,8 @@ class DetectActionServer:
         if goal.object_tag in g_detects.keys():
             result.position = g_detects[goal.object_tag]
             feedback.status = 1
-        result.position = []
+        else:
+            result.position = []
         feedback.status = -1
         print("[Result] detect result:", result)
         self.a_server.set_succeeded(result)
@@ -63,7 +64,8 @@ def callback_image(img_msg):
 def callback_tag(msg):
     global g_detects
     g_detects = {i.id: i.pose.pose for i in msg.detections}
-    print("tag_callback", g_detects)
+    if len(g_detects) != 0:
+        print("tag_callback", g_detects)
 
 
 def tf_callback_(object_pose):
