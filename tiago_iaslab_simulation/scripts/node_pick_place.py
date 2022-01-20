@@ -147,7 +147,6 @@ class PickAndPlaceServer(object):
         plan = move_group.go(wait=True)
         move_group.stop()
         move_group.clear_pose_targets()
-        move_group.execute(plan, wait=True)
 
         # joint_goal = move_group.get_current_joint_values()
         # joint_goal[0] = 0

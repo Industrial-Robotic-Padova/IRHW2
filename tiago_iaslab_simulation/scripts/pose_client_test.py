@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
             # Check on the table:
             for angle in [1]:
-                pick_obj(None)
+                # pick_obj(None)
                 send_pose(pose_calc_table(angle=angle))
                 obj_pos = get_obj_pose(id_)
                 if len(obj_pos.position) != 0:
