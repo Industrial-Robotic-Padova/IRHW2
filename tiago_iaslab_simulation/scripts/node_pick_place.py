@@ -26,9 +26,6 @@ class PickAndPlaceServer(object):
         self.object_width = rospy.get_param('~object_width')
         self.object_depth = rospy.get_param('~object_depth')
 
-        self.pick_as = SimpleActionServer('/prepare_robot', ir_msg.IRPickPlaceAction, execute_cb=self.prepare_robot, auto_start=False)
-        self.pick_as.start()
-
         self.pick_as = SimpleActionServer('/pickup_pose', ir_msg.IRPickPlaceAction, execute_cb=self.pick_cb, auto_start=False)
         self.pick_as.start()
 
@@ -56,12 +53,6 @@ class PickAndPlaceServer(object):
         self.head_cmd.publish(jt)
         rospy.loginfo("Done.")
 
-    def prepare_robot(self, goal):
-        self.lift_torso()
-        self.lower_head()
-        p_res = ir_msg.IRPickPlaceResult()
-        self.pick_as.set_succeeded(p_res)
-
     def move_arm_safe(self):
         rospy.loginfo("Waiting for '/play_motion' AS...")
         self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
@@ -77,6 +68,8 @@ class PickAndPlaceServer(object):
         """
         :type goal: PickUpPoseGoal
         """
+        self.lift_torso()
+        self.lower_head()
         self.move_arm(goal.object_pose)
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)

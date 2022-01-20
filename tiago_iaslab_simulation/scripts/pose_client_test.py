@@ -43,15 +43,6 @@ def get_obj_pose(obj_id):
     return client.get_result().object_pose
 
 
-def robot_prepare():
-    client = actionlib.SimpleActionClient('/prepare_robot', ir_msg.IRPickPlaceAction)
-    client.wait_for_server()
-    goal = ir_msg.IRPickPlaceGoal()
-    client.send_goal(goal)
-    client.wait_for_result()
-    return client.get_result()
-
-
 def pick_obj(obj_pose):
     client = actionlib.SimpleActionClient('/pickup_pose', ir_msg.IRPickPlaceAction)
     client.wait_for_server()
@@ -71,8 +62,6 @@ if __name__ == '__main__':
         print("ids:", ids_)
 
         # Robot stand up ....
-        robot_prepare()
-
         for id_ in ids_:
             # Do for each object
             # Check on the table:
@@ -80,7 +69,7 @@ if __name__ == '__main__':
                 # pick_obj(None)
                 send_pose(pose_calc_table(angle=angle))
                 obj_pose_stamped = get_obj_pose(id_)
-                if obj_pose_stamped.pose.position != 0:  # check if detected
+                if obj_pose_stamped.pose.position != float(0):  # check if detected
                     print('FINAL: ', obj_pose_stamped)
                     break
             # pick
