@@ -63,20 +63,21 @@ def callback_image(img_msg):
 
 def callback_tag(msg):
     global g_detects
-    g_detects = {i.id: i.pose.pose for i in msg.detections}
+    g_detects = {i.id: tf_(i).pose.pose for i in msg.detections if i.id in [1, 2, 3]}
     if len(g_detects) != 0:
         print("tag_callback", g_detects.keys())
 
 
-def tf_callback_(object_pose):
+def tf_(object_pose):
     tfBuffer = tf2_ros.Buffer()
 
     while True:
         try:
             transform = tfBuffer.lookup_transform('base_footprint', 'tag_3', rospy.Time(0))
             print(transform)
+            print('BEFORE', object_pose)
             tag_ps = do_transform_pose(object_pose, transform)
-            print(tag_ps)
+            print('AFTER', tag_ps)
             return tag_ps
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue

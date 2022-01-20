@@ -67,7 +67,7 @@ if __name__ == '__main__':
             # Do for each object
 
             # Check on the table:
-            for angle in [1, 2]:
+            for angle in [1]:
                 pick_obj(None)
                 send_pose(pose_calc_table(angle=angle))
                 obj_pos = get_obj_pose(id_)
