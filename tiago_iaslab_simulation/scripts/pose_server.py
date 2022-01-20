@@ -18,9 +18,9 @@ class ActionServer:
 
         def feedback_callback(feedback):
             print('[Feedback] Going to Goal Pose...',
-                  feedback.base_position.pose.position.x,
-                  feedback.base_position.pose.position.y,
-                  feedback.base_position.pose.orientation.z,
+                  round(feedback.base_position.pose.position.x, 2),
+                  round(feedback.base_position.pose.position.y, 2),
+                  round(feedback.base_position.pose.orientation.z, 2),
                   )
 
         client = actionlib.SimpleActionClient('/move_base', move_base_msgs.MoveBaseAction)

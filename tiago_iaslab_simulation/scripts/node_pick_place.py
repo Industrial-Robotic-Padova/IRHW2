@@ -13,10 +13,6 @@ from tiago_iaslab_simulation import msg as ir_msg
 class PickAndPlaceServer(object):
 
     def __init__(self):
-        rospy.loginfo("Waiting for '/play_motion' AS...")
-        self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
-        self.play_m_as.wait_for_server()
-
         # Get the object size
         self.object_height = rospy.get_param('~object_height')
         self.object_width = rospy.get_param('~object_width')
@@ -49,12 +45,24 @@ class PickAndPlaceServer(object):
         self.head_cmd.publish(jt)
         rospy.loginfo("Done.")
 
+    def move_arm_safe(self):
+        rospy.loginfo("Waiting for '/play_motion' AS...")
+        self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
+        self.play_m_as.wait_for_server()
+        rospy.loginfo("Moving arm to a safe pose")
+        pmg = PlayMotionGoal()
+        pmg.motion_name = 'pick_final_pose'
+        pmg.skip_planning = False
+        self.play_m_as.send_goal_and_wait(pmg)
+        rospy.loginfo("Raise object done.")
+
     def pick_cb(self, goal):
         """
         :type goal: PickUpPoseGoal
         """
         self.lift_torso()
         self.lower_head()
+        self.move_arm_safe()
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)
         error_code = 1
