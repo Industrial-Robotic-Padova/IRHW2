@@ -61,7 +61,7 @@ if __name__ == '__main__':
             for angle in [1, 3, 4]:
                 send_pose(pose_calc_table(angle=angle))
                 obj_pos = get_obj_pose(id_)
-                if len(obj_pos) != 0:
+                if len(obj_pos.position) != 0:
                     print('FINAL: ', obj_pos)
                     break
             # pick
