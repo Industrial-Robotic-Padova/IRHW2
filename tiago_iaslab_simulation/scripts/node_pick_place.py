@@ -114,15 +114,15 @@ class PickAndPlaceServer(object):
         moveit_commander.roscpp_initialize(sys.argv)
         robot = moveit_commander.RobotCommander()
         scene = moveit_commander.PlanningSceneInterface()
-        group = moveit_commander.MoveGroupCommander("arm_torso")
+        move_group = moveit_commander.MoveGroupCommander("arm_torso")
         # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.DisplayTrajectory)
 
         # We can get the name of the reference frame for this robot:
-        planning_frame = group.get_planning_frame()
+        planning_frame = move_group.get_planning_frame()
         print("============ Planning frame: %s" % planning_frame)
 
         # We can also print the name of the end-effector link for this group:
-        eef_link = group.get_end_effector_link()
+        eef_link = move_group.get_end_effector_link()
         print("============ End effector link: %s" % eef_link)
 
         # We can get a list of all the groups in the robot:
@@ -134,16 +134,31 @@ class PickAndPlaceServer(object):
         print(robot.get_current_state())
         print("")
 
-        joint_goal = group.get_current_joint_values()
-        joint_goal[0] = 0
-        joint_goal[1] = -pi / 8
-        joint_goal[2] = 0
-        joint_goal[3] = -pi / 8
-        joint_goal[4] = 0
-        joint_goal[5] = pi / 8
-        joint_goal[6] = 0
-        group.go(joint_goal, wait=True)
-        group.stop()
+        pose_goal = geometry_msgs.msg.Pose()
+        pose_goal.position.x = 0.4
+        pose_goal.position.y = -0.3
+        pose_goal.position.z = 0.26
+        pose_goal.orientation.x = -0.011
+        pose_goal.orientation.y = 1.57
+        pose_goal.orientation.z = 0.037
+        pose_goal.orientation.w = 1.0
+
+        move_group.set_pose_target(pose_goal)
+        plan = move_group.go(wait=True)
+        move_group.stop()
+        move_group.clear_pose_targets()
+        move_group.execute(plan, wait=True)
+
+        # joint_goal = move_group.get_current_joint_values()
+        # joint_goal[0] = 0
+        # joint_goal[1] = -pi / 8
+        # joint_goal[2] = 0
+        # joint_goal[3] = -pi / 8
+        # joint_goal[4] = 0
+        # joint_goal[5] = pi / 8
+        # joint_goal[6] = 0
+        # move_group.go(joint_goal, wait=True)
+        # move_group.stop()
         # print("============ Visualizing plan1")
         # display_trajectory = moveit_msgs.msg.DisplayTrajectory()
         # display_trajectory.trajectory_start = robot.get_current_state()
