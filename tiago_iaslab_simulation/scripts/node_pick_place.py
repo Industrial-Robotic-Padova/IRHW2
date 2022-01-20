@@ -13,10 +13,6 @@ from tiago_iaslab_simulation import msg as ir_msg
 class PickAndPlaceServer(object):
 
     def __init__(self):
-        rospy.loginfo("Setting publishers to torso and head controller...")
-        self.torso_cmd = rospy.Publisher('/torso_controller/command', JointTrajectory, queue_size=1)
-        self.head_cmd = rospy.Publisher('/head_controller/command', JointTrajectory, queue_size=1)
-
         rospy.loginfo("Waiting for '/play_motion' AS...")
         self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
         self.play_m_as.wait_for_server()
@@ -32,6 +28,7 @@ class PickAndPlaceServer(object):
     def lift_torso(self):
         # Move torso to its maximum height
         rospy.loginfo("Moving torso up")
+        self.torso_cmd = rospy.Publisher('/torso_controller/command', JointTrajectory, queue_size=1)
         jt = JointTrajectory()
         jt.joint_names = ['torso_lift_joint']
         jtp = JointTrajectoryPoint()
@@ -42,6 +39,7 @@ class PickAndPlaceServer(object):
 
     def lower_head(self):
         rospy.loginfo("Moving head down")
+        self.head_cmd = rospy.Publisher('/head_controller/command', JointTrajectory, queue_size=1)
         jt = JointTrajectory()
         jt.joint_names = ['head_1_joint', 'head_2_joint']
         jtp = JointTrajectoryPoint()
