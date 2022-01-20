@@ -56,7 +56,7 @@ class PickAndPlaceServer(object):
         self.head_cmd.publish(jt)
         rospy.loginfo("Done.")
 
-    def prepare_robot(self):
+    def prepare_robot(self, goal):
         self.lift_torso()
         self.lower_head()
         p_res = ir_msg.IRPickPlaceResult()

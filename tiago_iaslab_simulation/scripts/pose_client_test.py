@@ -40,7 +40,7 @@ def get_obj_pose(obj_id):
     goal = ir_msg.IRDetectGoal(object_tag=obj_id)
     client.send_goal(goal, feedback_cb=detect_feedback_callback)
     client.wait_for_result()
-    return client.get_result()
+    return client.get_result().object_pose
 
 
 def robot_prepare():
@@ -49,7 +49,7 @@ def robot_prepare():
     goal = ir_msg.IRPickPlaceGoal()
     client.send_goal(goal)
     client.wait_for_result()
-    return client.get_result().object_pose
+    return client.get_result()
 
 
 def pick_obj(obj_pose):
@@ -59,7 +59,7 @@ def pick_obj(obj_pose):
     goal.object_pose = obj_pose
     client.send_goal(goal)
     client.wait_for_result()
-    return client.get_result().object_pose
+    return client.get_result()
 
 
 if __name__ == '__main__':
