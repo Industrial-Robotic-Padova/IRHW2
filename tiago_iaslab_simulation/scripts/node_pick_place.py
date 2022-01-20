@@ -21,6 +21,9 @@ from math import pi
 class PickAndPlaceServer(object):
 
     def __init__(self):
+        self.torso_cmd = rospy.Publisher('/torso_controller/command', JointTrajectory, queue_size=1)
+        self.head_cmd = rospy.Publisher('/head_controller/command', JointTrajectory, queue_size=1)
+
         # Get the object size
         self.object_height = rospy.get_param('~object_height')
         self.object_width = rospy.get_param('~object_width')
@@ -32,7 +35,6 @@ class PickAndPlaceServer(object):
     def lift_torso(self):
         # Move torso to its maximum height
         rospy.loginfo("Moving torso up")
-        self.torso_cmd = rospy.Publisher('/torso_controller/command', JointTrajectory, queue_size=1)
         jt = JointTrajectory()
         jt.joint_names = ['torso_lift_joint']
         jtp = JointTrajectoryPoint()
@@ -43,7 +45,6 @@ class PickAndPlaceServer(object):
 
     def lower_head(self):
         rospy.loginfo("Moving head down")
-        self.head_cmd = rospy.Publisher('/head_controller/command', JointTrajectory, queue_size=1)
         jt = JointTrajectory()
         jt.joint_names = ['head_1_joint', 'head_2_joint']
         jtp = JointTrajectoryPoint()
