@@ -117,14 +117,30 @@ class PickAndPlaceServer(object):
         group = moveit_commander.MoveGroupCommander("arm_torso")
         # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.DisplayTrajectory)
 
+        # We can get the name of the reference frame for this robot:
+        planning_frame = group.get_planning_frame()
+        print("============ Planning frame: %s" % planning_frame)
+
+        # We can also print the name of the end-effector link for this group:
+        eef_link = group.get_end_effector_link()
+        print("============ End effector link: %s" % eef_link)
+
+        # We can get a list of all the groups in the robot:
+        print("============ Available Planning Groups:", robot.get_group_names())
+
+        # Sometimes for debugging it is useful to print the entire state of the
+        # robot:
+        print("============ Printing robot state")
         print(robot.get_current_state())
+        print("")
+
         joint_goal = group.get_current_joint_values()
         joint_goal[0] = 0
-        joint_goal[1] = -pi / 4
+        joint_goal[1] = -pi / 8
         joint_goal[2] = 0
-        joint_goal[3] = -pi / 2
+        joint_goal[3] = -pi / 8
         joint_goal[4] = 0
-        joint_goal[5] = pi / 3
+        joint_goal[5] = pi / 8
         joint_goal[6] = 0
         group.go(joint_goal, wait=True)
         group.stop()
