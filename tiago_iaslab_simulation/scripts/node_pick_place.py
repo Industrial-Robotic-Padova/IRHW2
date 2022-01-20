@@ -1,13 +1,21 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-import copy
 
+import sys
 import rospy
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from play_motion_msgs.msg import PlayMotionAction, PlayMotionGoal
 from actionlib import SimpleActionClient, SimpleActionServer
 
 from tiago_iaslab_simulation import msg as ir_msg
+
+import geometry_msgs
+# from apriltag_ros.msg import AprilTagDetectionArray
+import moveit_commander
+# from moveit_msgs.msg import CollisionObject
+# from moveit_msgs.srv import GetPositionIKRequest, GraspPlanning, GetPositionIK
+from moveit_msgs import msg as moveit_msgs
+from math import pi
 
 
 class PickAndPlaceServer(object):
@@ -62,7 +70,7 @@ class PickAndPlaceServer(object):
         """
         self.lift_torso()
         self.lower_head()
-        self.move_arm_safe()
+        self.move_arm()
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)
         error_code = 1
@@ -98,6 +106,58 @@ class PickAndPlaceServer(object):
     #     rospy.loginfo("Pick result: " + str(moveit_error_dict[result.error_code.val]))
     #
     #     return result.error_code.val
+
+    def move_arm(self):
+        self.group = None
+        self.object_pose = geometry_msgs.PoseStamped()
+
+        moveit_commander.roscpp_initialize(sys.argv)
+        robot = moveit_commander.RobotCommander()
+        scene = moveit_commander.PlanningSceneInterface()
+        group = moveit_commander.MoveGroupCommander("arm_torso")
+        # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.DisplayTrajectory)
+
+        print(robot.get_current_state())
+        joint_goal = group.get_current_joint_values()
+        joint_goal[0] = 0
+        joint_goal[1] = -pi / 4
+        joint_goal[2] = 0
+        joint_goal[3] = -pi / 2
+        joint_goal[4] = 0
+        joint_goal[5] = pi / 3
+        joint_goal[6] = 0
+        group.go(joint_goal, wait=True)
+        group.stop()
+        # print("============ Visualizing plan1")
+        # display_trajectory = moveit_msgs.msg.DisplayTrajectory()
+        # display_trajectory.trajectory_start = robot.get_current_state()
+        # display_trajectory.trajectory.append(plan1)
+        # display_trajectory_publisher.publish(display_trajectory)
+        # print("============ Waiting while plan1 is visualized (again)...")
+        # rospy.Subscriber('/tag_detections', AprilTagDetectionArray, self.tag_callback)
+        # pose_target = geometry_msgs.msg.Pose()
+        # pose_target.orientation.w = -tag_ps.pose.orientation.w
+        # pose_target.position.x = tag_ps.pose.position.x
+        # pose_target.position.y = tag_ps.pose.position.y
+        # pose_target.position.z = tag_ps.pose.position.z - 0.5
+        # print(tag_ps.pose.position.x, tag_ps.pose.position.y, tag_ps.pose.position.z - 0.5)
+        # print("============ Reference frame: %s" % group.get_planning_frame())
+        # print("============ Reference frame: %s" % group.get_end_effector_link())
+        # group.set_pose_target(pose_target)
+        # plan = group.go(wait=True)
+        # group.stop()
+        # group.clear_pose_targets()
+        # pose_target = geometry_msgs.msg.Pose()
+        # pose_target.orientation.w = -tag_ps.pose.orientation.w
+        # pose_target.position.x = tag_ps.pose.position.x
+        # pose_target.position.y = tag_ps.pose.position.y
+        # pose_target.position.z = tag_ps.pose.position.z
+        # print("============ Reference frame: %s" % group.get_planning_frame())
+        # print("============ Reference frame: %s" % group.get_end_effector_link())
+        # group.set_pose_target(pose_target)
+        # plan = group.go(wait=True)
+        # group.stop()
+        # group.clear_pose_targets()
 
 
 if __name__ == '__main__':
