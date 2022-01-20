@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import rospy
 import actionlib
+from geometry_msgs import msg as geometry_msgs
 
 from tiago_iaslab_simulation import msg as ir_msg
 from tiago_iaslab_simulation.srv import Objs
@@ -53,6 +54,16 @@ def pick_obj(obj_pose):
     return client.get_result()
 
 
+def prepare_robot():
+    client = actionlib.SimpleActionClient('/pickup_pose', ir_msg.IRPickPlaceAction)
+    client.wait_for_server()
+    goal = ir_msg.IRPickPlaceGoal()
+    goal.object_pose = geometry_msgs.PoseStamped()
+    client.send_goal(goal)
+    client.wait_for_result()
+    return client.get_result()
+
+
 if __name__ == '__main__':
     try:
         rospy.init_node('ir_pose_client_test')
@@ -62,6 +73,8 @@ if __name__ == '__main__':
         print("ids:", ids_)
 
         # Robot stand up ....
+        prepare_robot()
+
         for id_ in ids_:
             # Do for each object
             # Check on the table:
