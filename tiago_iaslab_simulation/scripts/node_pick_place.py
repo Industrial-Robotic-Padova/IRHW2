@@ -19,9 +19,7 @@ class PickAndPlaceServer(object):
 
         rospy.loginfo("Waiting for '/play_motion' AS...")
         self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
-        if not self.play_m_as.wait_for_server(rospy.Duration(20)):
-            rospy.logerr("Could not connect to /play_motion AS")
-            exit()
+        self.play_m_as.wait_for_server()
 
         # Get the object size
         self.object_height = rospy.get_param('~object_height')
