@@ -65,7 +65,7 @@ def callback_tag(msg):
     global g_detects
     g_detects = {i.id: i.pose.pose for i in msg.detections}
     if len(g_detects) != 0:
-        print("tag_callback", g_detects)
+        print("tag_callback", g_detects.keys())
 
 
 def tf_callback_(object_pose):

@@ -43,6 +43,15 @@ def get_obj_pose(obj_id):
     return client.get_result()
 
 
+def pick_obj(obj_pose):
+    client = actionlib.SimpleActionClient('/pickup_pose', ir_msg.IRPickPlaceAction)
+    client.wait_for_server()
+    goal = ir_msg.IRPickPlaceGoal()
+    client.send_goal(goal)
+    client.wait_for_result()
+    return client.get_result()
+
+
 if __name__ == '__main__':
     try:
         rospy.init_node('ir_pose_client_test')
@@ -58,7 +67,8 @@ if __name__ == '__main__':
             # Do for each object
 
             # Check on the table:
-            for angle in [1, 3, 4]:
+            for angle in [1, 2]:
+                pick_obj(None)
                 send_pose(pose_calc_table(angle=angle))
                 obj_pos = get_obj_pose(id_)
                 if len(obj_pos.position) != 0:
