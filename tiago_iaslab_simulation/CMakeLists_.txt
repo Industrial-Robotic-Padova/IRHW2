@@ -72,6 +72,7 @@ add_action_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
+  geometry_msgs
   actionlib_msgs
   std_msgs
 )
