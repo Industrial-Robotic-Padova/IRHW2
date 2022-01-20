@@ -9,12 +9,12 @@ from actionlib import SimpleActionClient, SimpleActionServer
 
 from tiago_iaslab_simulation import msg as ir_msg
 
-import geometry_msgs
+from geometry_msgs import msg as geometry_msgs
+from moveit_msgs import msg as moveit_msgs
 # from apriltag_ros.msg import AprilTagDetectionArray
 import moveit_commander
 # from moveit_msgs.msg import CollisionObject
 # from moveit_msgs.srv import GetPositionIKRequest, GraspPlanning, GetPositionIK
-from moveit_msgs import msg as moveit_msgs
 from math import pi
 
 
