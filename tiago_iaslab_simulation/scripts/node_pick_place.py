@@ -134,7 +134,7 @@ class PickAndPlaceServer(object):
         print(robot.get_current_state())
         print("")
 
-        pose_goal = geometry_msgs.msg.Pose()
+        pose_goal = geometry_msgs.Pose()
         pose_goal.position.x = 0.4
         pose_goal.position.y = -0.3
         pose_goal.position.z = 0.26
