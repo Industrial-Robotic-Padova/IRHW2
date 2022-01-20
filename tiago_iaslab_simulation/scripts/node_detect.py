@@ -41,10 +41,11 @@ class DetectActionServer:
             self.a_server.publish_feedback(feedback)
 
         if goal.object_tag in g_detects.keys():
-            result.position = g_detects[goal.object_tag]
+            result.object_pose = g_detects[goal.object_tag]
             feedback.status = 1
         else:
-            result.position = []
+            result.object_pose = PoseStamped()
+
         feedback.status = -1
         print("[Result] detect result:", result)
         self.a_server.set_succeeded(result)
@@ -62,21 +63,26 @@ def callback_image(img_msg):
 
 
 def callback_tag(msg):
+    # apriltags_ros/AprilTagDetection[] detections
+    # AprilTagDetection:
+    # int32 id
+    # float64 size
+    # geometry_msgs/PoseStamped pose
     global g_detects
-    g_detects = {i.id: tf_(i).pose.pose for i in msg.detections if i.id in [1, 2, 3]}
+    g_detects = {i.id: tf_(i.pose) for i in msg.detections}  # {int: PoseStamped}
     if len(g_detects) != 0:
         print("tag_callback", g_detects.keys())
 
 
-def tf_(object_pose):
+def tf_(object_pose_stamped):
     tfBuffer = tf2_ros.Buffer()
 
     while True:
         try:
             transform = tfBuffer.lookup_transform('base_footprint', 'tag_3', rospy.Time(0))
             print(transform)
-            print('BEFORE', object_pose)
-            tag_ps = do_transform_pose(object_pose, transform)
+            print('BEFORE', object_pose_stamped)
+            tag_ps = do_transform_pose(object_pose_stamped, transform)
             print('AFTER', tag_ps)
             return tag_ps
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):

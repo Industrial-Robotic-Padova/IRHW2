@@ -107,87 +107,34 @@ class PickAndPlaceServer(object):
     #
     #     return result.error_code.val
 
-    def move_arm(self):
+    def move_arm(self, pose_stamped):
         self.group = None
         self.object_pose = geometry_msgs.PoseStamped()
 
         moveit_commander.roscpp_initialize(sys.argv)
         robot = moveit_commander.RobotCommander()
-        scene = moveit_commander.PlanningSceneInterface()
         move_group = moveit_commander.MoveGroupCommander("arm_torso")
-        # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.DisplayTrajectory)
 
-        # We can get the name of the reference frame for this robot:
-        planning_frame = move_group.get_planning_frame()
-        print("============ Planning frame: %s" % planning_frame)
-
-        # We can also print the name of the end-effector link for this group:
-        eef_link = move_group.get_end_effector_link()
-        print("============ End effector link: %s" % eef_link)
-
-        # We can get a list of all the groups in the robot:
+        print("============ Planning frame: %s" % move_group.get_planning_frame())
+        print("============ End effector link: %s" % move_group.get_end_effector_link())
         print("============ Available Planning Groups:", robot.get_group_names())
+        print("============ Printing robot state", robot.get_current_state())
+        print()
 
-        # Sometimes for debugging it is useful to print the entire state of the
-        # robot:
-        print("============ Printing robot state")
-        print(robot.get_current_state())
-        print("")
-
-        pose_goal = geometry_msgs.Pose()
-        pose_goal.position.x = 0.4
-        pose_goal.position.y = -0.3
-        pose_goal.position.z = 0.26
-        pose_goal.orientation.x = -0.011
-        pose_goal.orientation.y = 1.57
-        pose_goal.orientation.z = 0.037
-        pose_goal.orientation.w = 1.0
+        pose_goal = pose_stamped.pose
+        # pose_goal = geometry_msgs.Pose()
+        # pose_goal.position.x = 0.4
+        # pose_goal.position.y = -0.3
+        # pose_goal.position.z = 0.26
+        # pose_goal.orientation.x = -0.011
+        # pose_goal.orientation.y = 1.57
+        # pose_goal.orientation.z = 0.037
+        # pose_goal.orientation.w = 1.0
 
         move_group.set_pose_target(pose_goal)
         plan = move_group.go(wait=True)
         move_group.stop()
         move_group.clear_pose_targets()
-
-        # joint_goal = move_group.get_current_joint_values()
-        # joint_goal[0] = 0
-        # joint_goal[1] = -pi / 8
-        # joint_goal[2] = 0
-        # joint_goal[3] = -pi / 8
-        # joint_goal[4] = 0
-        # joint_goal[5] = pi / 8
-        # joint_goal[6] = 0
-        # move_group.go(joint_goal, wait=True)
-        # move_group.stop()
-        # print("============ Visualizing plan1")
-        # display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-        # display_trajectory.trajectory_start = robot.get_current_state()
-        # display_trajectory.trajectory.append(plan1)
-        # display_trajectory_publisher.publish(display_trajectory)
-        # print("============ Waiting while plan1 is visualized (again)...")
-        # rospy.Subscriber('/tag_detections', AprilTagDetectionArray, self.tag_callback)
-        # pose_target = geometry_msgs.msg.Pose()
-        # pose_target.orientation.w = -tag_ps.pose.orientation.w
-        # pose_target.position.x = tag_ps.pose.position.x
-        # pose_target.position.y = tag_ps.pose.position.y
-        # pose_target.position.z = tag_ps.pose.position.z - 0.5
-        # print(tag_ps.pose.position.x, tag_ps.pose.position.y, tag_ps.pose.position.z - 0.5)
-        # print("============ Reference frame: %s" % group.get_planning_frame())
-        # print("============ Reference frame: %s" % group.get_end_effector_link())
-        # group.set_pose_target(pose_target)
-        # plan = group.go(wait=True)
-        # group.stop()
-        # group.clear_pose_targets()
-        # pose_target = geometry_msgs.msg.Pose()
-        # pose_target.orientation.w = -tag_ps.pose.orientation.w
-        # pose_target.position.x = tag_ps.pose.position.x
-        # pose_target.position.y = tag_ps.pose.position.y
-        # pose_target.position.z = tag_ps.pose.position.z
-        # print("============ Reference frame: %s" % group.get_planning_frame())
-        # print("============ Reference frame: %s" % group.get_end_effector_link())
-        # group.set_pose_target(pose_target)
-        # plan = group.go(wait=True)
-        # group.stop()
-        # group.clear_pose_targets()
 
 
 if __name__ == '__main__':
