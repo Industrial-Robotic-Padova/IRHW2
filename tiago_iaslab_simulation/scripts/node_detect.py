@@ -26,12 +26,11 @@ class DetectActionServer:
         self.a_server.start()
 
     def execute_cb(self, goal):
+        print('[DetectActionServer] waiting for apriltag')
         feedback = ir_msg.IRDetectFeedback()
         result = ir_msg.IRDetectResult()
         rate = rospy.Rate(1)
-
         while g_detects is None:
-            print('[DetectActionServer] waiting for apriltag')
             feedback.status = 0
             self.a_server.publish_feedback(feedback)
 
