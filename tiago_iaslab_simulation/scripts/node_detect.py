@@ -31,20 +31,24 @@ class DetectActionServer:
         rate = rospy.Rate(1)
 
         while g_detects is None:
-            print('[Feedback] waiting for apriltag')
+            print('[DetectActionServer] waiting for apriltag')
             feedback.status = 0
             self.a_server.publish_feedback(feedback)
 
-        print('finding tag in table: ', goal.object_tag, g_detects)
         result.object_pose = PoseStamped()
 
         if goal.object_tag in g_detects.keys():
-            result.object_pose.pose = g_detects[goal.object_tag].pose.pose
+            result.object_pose.pose = g_detects[goal.object_tag].pose.pose.pose
+            result.object_pose.header = g_detects[goal.object_tag].header
             feedback.status = 1
+            print("[DetectActionServer] detect result:", result)
+            result.object_pose = tf_(result.object_pose)
+            print("[DetectActionServer] detect result after transform:", result)
+            self.a_server.set_succeeded(result)
 
         feedback.status = -1
-        print("[Result] detect result:", result)
-        self.a_server.set_succeeded(result)
+        print("[DetectActionServer] detect result:", 'Not Found')
+        self.a_server.set_aborted(result)
 
 
 def callback_image(img_msg):
@@ -66,24 +70,33 @@ def callback_tag(msg):
     global g_detects
     g_detects = {i.id[0]: i for i in msg.detections}  # {int: PoseStamped}
 
-    print("tag_callback", g_detects.keys())
-    # if len(g_detects) != 0:
-    #     print("tag_callback", g_detects.keys())
+    if len(g_detects) != 0:
+        print("tag_callback", g_detects.keys())
 
 
-def tf_(object_pose_stamped):
-    tfBuffer = tf2_ros.Buffer()
+def tf_(aruco_pose):
+    def strip_leading_slash(s):
+        return s[1:] if s.startswith("/") else s
 
-    while True:
+    aruco_pose.header.frame_id = strip_leading_slash(aruco_pose.header.frame_id)
+    rospy.loginfo("Got: " + str(aruco_pose))
+
+    rospy.loginfo("spherical_grasp_gui: Transforming from frame: " + aruco_pose.header.frame_id + " to 'base_footprint'")
+    ps = PoseStamped()
+    ps.pose.position = aruco_pose.pose.position
+    ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", aruco_pose.header.frame_id)
+    ps.header.frame_id = aruco_pose.header.frame_id
+    transform_ok = False
+    while not transform_ok and not rospy.is_shutdown():
         try:
-            transform = tfBuffer.lookup_transform('base_footprint', 'tag_3', rospy.Time(0))
-            print(transform)
-            print('BEFORE', object_pose_stamped)
-            tag_ps = do_transform_pose(object_pose_stamped, transform)
-            print('AFTER', tag_ps)
-            return tag_ps
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            continue
+            transform = tfBuffer.lookup_transform("base_footprint", ps.header.frame_id, rospy.Time(0))
+            aruco_ps = do_transform_pose(ps, transform)
+            transform_ok = True
+        except tf2_ros.ExtrapolationException as e:
+            rospy.logwarn("Exception on transforming point... trying again \n(" + str(e) + ")")
+            rospy.sleep(0.01)
+            ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", aruco_pose.header.frame_id)
+    return aruco_ps
 
 
 if __name__ == "__main__":
@@ -94,6 +107,9 @@ if __name__ == "__main__":
     cv2.namedWindow("Image Window", 1)
 
     sub_msg = rospy.Subscriber('/tag_detections', AprilTagDetectionArray, callback_tag)
+
+    tfBuffer = tf2_ros.Buffer()
+    tf_l = tf2_ros.TransformListener(tfBuffer)
 
     s = DetectActionServer()
     while not rospy.is_shutdown():
