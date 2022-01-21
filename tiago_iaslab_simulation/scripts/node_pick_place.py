@@ -55,15 +55,21 @@ class PickAndPlaceServer(object):
         rospy.loginfo("Done.")
 
     def move_arm_safe(self):
-        rospy.loginfo("Waiting for '/play_motion' AS...")
-        self.play_m_as = SimpleActionClient('/play_motion', PlayMotionAction)
-        self.play_m_as.wait_for_server()
         rospy.loginfo("Moving arm to a safe pose")
-        pmg = PlayMotionGoal()
-        pmg.motion_name = 'pick_final_pose'
-        pmg.skip_planning = False
-        self.play_m_as.send_goal_and_wait(pmg)
-        rospy.loginfo("Raise object done.")
+        moveit_commander.roscpp_initialize(sys.argv)
+        robot = moveit_commander.RobotCommander()
+        move_group = moveit_commander.MoveGroupCommander("arm_torso")
+
+        joint_goal = move_group.get_current_joint_values()
+        joint_goal[0] = 0
+        joint_goal[1] = 1.57
+        joint_goal[2] = -1
+        joint_goal[3] = 0
+        joint_goal[4] = 1
+        joint_goal[5] = 0
+        joint_goal[6] = 0
+        move_group.go(joint_goal, wait=True)
+        move_group.stop()
 
     def pick_cb(self, goal):
         """
@@ -71,6 +77,7 @@ class PickAndPlaceServer(object):
         """
         self.lift_torso()
         self.lower_head()
+        self.move_arm_safe()
         self.move_arm(goal.object_pose)
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)
