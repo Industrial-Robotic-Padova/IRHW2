@@ -22,11 +22,6 @@ g_detects = None
 
 class DetectActionServer:
     def __init__(self):
-
-        sub_image = rospy.Subscriber("/xtion/rgb/image_raw", Image, callback_image)
-        sub_msg = rospy.Subscriber('/tag_detections', AprilTagDetectionArray, callback_tag)
-        cv2.namedWindow("Image Window", 1)
-
         self.a_server = actionlib.SimpleActionServer("/ir_detect", ir_msg.IRDetectAction, execute_cb=self.execute_cb, auto_start=False)
         self.a_server.start()
 
@@ -39,6 +34,8 @@ class DetectActionServer:
             print('[Feedback] waiting for apriltag')
             feedback.status = 0
             self.a_server.publish_feedback(feedback)
+
+        print('finding tag in table: ', goal.object_tag, g_detects)
 
         if goal.object_tag in g_detects.keys():
             result.object_pose = g_detects[goal.object_tag]
@@ -54,10 +51,9 @@ class DetectActionServer:
 def callback_image(img_msg):
     # rospy.loginfo(img_msg.header)
     try:
-        pass
-        # cv_image = bridge.imgmsg_to_cv2(img_msg, "passthrough")
-        # cv2.imshow("Image Window", cv_image)
-        # cv2.waitKey(3)
+        cv_image = bridge.imgmsg_to_cv2(img_msg, "passthrough")
+        cv2.imshow("Image Window", cv_image)
+        cv2.waitKey(3)
     except CvBridgeError as e:
         rospy.logerr("CvBridge Error: {0}".format(e))
 
@@ -70,8 +66,9 @@ def callback_tag(msg):
     # geometry_msgs/PoseStamped pose
     global g_detects
     g_detects = {i.id: tf_(i.pose) for i in msg.detections}  # {int: PoseStamped}
-    if len(g_detects) != 0:
-        print("tag_callback", g_detects.keys())
+    print("tag_callback", g_detects.keys())
+    # if len(g_detects) != 0:
+    #     print("tag_callback", g_detects.keys())
 
 
 def tf_(object_pose_stamped):
@@ -90,8 +87,13 @@ def tf_(object_pose_stamped):
 
 
 if __name__ == "__main__":
-    bridge = CvBridge()
-
     rospy.init_node("ir_detect")
+
+    bridge = CvBridge()
+    sub_image = rospy.Subscriber("/xtion/rgb/image_raw", Image, callback_image)
+    sub_msg = rospy.Subscriber('/tag_detections', AprilTagDetectionArray, callback_tag)
+    cv2.namedWindow("Image Window", 1)
+
     s = DetectActionServer()
-    rospy.spin()
+    while not rospy.is_shutdown():
+        rospy.spin()
