@@ -71,6 +71,7 @@ if __name__ == '__main__':
         print("Result:", result.status)
         ids_ = get_obj_ids()
         print("ids:", ids_)
+        ids_ = [1, 2, 3]
 
         # Robot stand up ....
         prepare_robot()

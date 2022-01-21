@@ -36,12 +36,11 @@ class DetectActionServer:
             self.a_server.publish_feedback(feedback)
 
         print('finding tag in table: ', goal.object_tag, g_detects)
+        result.object_pose = PoseStamped()
 
         if goal.object_tag in g_detects.keys():
-            result.object_pose = g_detects[goal.object_tag]
+            result.object_pose.pose = g_detects[goal.object_tag].pose.pose
             feedback.status = 1
-        else:
-            result.object_pose = PoseStamped()
 
         feedback.status = -1
         print("[Result] detect result:", result)
@@ -65,7 +64,8 @@ def callback_tag(msg):
     # float64 size
     # geometry_msgs/PoseStamped pose
     global g_detects
-    g_detects = {i.id: tf_(i.pose) for i in msg.detections}  # {int: PoseStamped}
+    g_detects = {i.id[0]: i for i in msg.detections}  # {int: PoseStamped}
+
     print("tag_callback", g_detects.keys())
     # if len(g_detects) != 0:
     #     print("tag_callback", g_detects.keys())
@@ -91,8 +91,9 @@ if __name__ == "__main__":
 
     bridge = CvBridge()
     sub_image = rospy.Subscriber("/xtion/rgb/image_raw", Image, callback_image)
-    sub_msg = rospy.Subscriber('/tag_detections', AprilTagDetectionArray, callback_tag)
     cv2.namedWindow("Image Window", 1)
+
+    sub_msg = rospy.Subscriber('/tag_detections', AprilTagDetectionArray, callback_tag)
 
     s = DetectActionServer()
     while not rospy.is_shutdown():
