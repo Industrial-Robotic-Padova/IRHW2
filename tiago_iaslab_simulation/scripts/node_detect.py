@@ -39,16 +39,16 @@ class DetectActionServer:
 
         if goal.object_tag in g_detects.keys():
             result.object_pose.pose = g_detects[goal.object_tag].pose.pose.pose
-            result.object_pose.header = g_detects[goal.object_tag].header
+            result.object_pose.header = g_detects[goal.object_tag].pose.header
             feedback.status = 1
             print("[DetectActionServer] detect result:", result)
             result.object_pose = tf_(result.object_pose)
             print("[DetectActionServer] detect result after transform:", result)
             self.a_server.set_succeeded(result)
-
-        feedback.status = -1
-        print("[DetectActionServer] detect result:", 'Not Found')
-        self.a_server.set_aborted(result)
+        else:
+            feedback.status = -1
+            print("[DetectActionServer] detect result:", 'Not Found')
+            self.a_server.set_aborted(result)
 
 
 def callback_image(img_msg):

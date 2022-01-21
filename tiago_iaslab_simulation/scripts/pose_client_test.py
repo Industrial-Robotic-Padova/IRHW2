@@ -55,13 +55,7 @@ def pick_obj(obj_pose):
 
 
 def prepare_robot():
-    client = actionlib.SimpleActionClient('/pickup_pose', ir_msg.IRPickPlaceAction)
-    client.wait_for_server()
-    goal = ir_msg.IRPickPlaceGoal()
-    goal.object_pose = geometry_msgs.PoseStamped()
-    client.send_goal(goal)
-    client.wait_for_result()
-    return client.get_result()
+    return pick_obj(geometry_msgs.PoseStamped())
 
 
 if __name__ == '__main__':
