@@ -55,7 +55,17 @@ def pick_obj(obj_pose_stamped):
 
 
 def prepare_robot():
-    return pick_obj(geometry_msgs.PoseStamped())
+    rospy.loginfo("Moving arm to a safe pose")
+    pose_safe = geometry_msgs.PoseStamped()
+    # 0.2 0.7 1.3 0 3.14 -1.57
+    # 0.2 0.5 1.5 0 3.14 -1.57
+    pose_safe.pose.position.x = 0.2
+    pose_safe.pose.position.y = 0.5
+    pose_safe.pose.position.z = 1.5
+    pose_safe.pose.orientation.z = 0
+    pose_safe.pose.orientation.z = 3.14
+    pose_safe.pose.orientation.z = -1.57
+    return pick_obj(pose_safe)
 
 
 if __name__ == '__main__':

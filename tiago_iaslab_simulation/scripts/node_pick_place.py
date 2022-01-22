@@ -54,37 +54,13 @@ class PickAndPlaceServer(object):
         self.head_cmd.publish(jt)
         rospy.loginfo("Done.")
 
-    def move_arm_safe(self):
-        rospy.loginfo("Moving arm to a safe pose")
-        moveit_commander.roscpp_initialize(sys.argv)
-        robot = moveit_commander.RobotCommander()
-        move_group = moveit_commander.MoveGroupCommander("arm_torso")
-
-        print("============ Planning frame: %s" % move_group.get_planning_frame())
-        print("============ End effector link: %s" % move_group.get_end_effector_link())
-        print("============ Available Planning Groups:", robot.get_group_names())
-        print("============ Printing robot state")
-        print(robot.get_current_state())
-        print("")
-
-        joint_goal = move_group.get_current_joint_values()
-        joint_goal[0] = 0
-        joint_goal[1] = 1.57
-        joint_goal[2] = -1
-        joint_goal[3] = 0
-        joint_goal[4] = 1
-        joint_goal[5] = 0
-        joint_goal[6] = 0
-        move_group.go(joint_goal, wait=True)
-        move_group.stop()
-
     def pick_cb(self, goal):
         """
         :type goal: PickUpPoseGoal
         """
         self.lift_torso()
         self.lower_head()
-        self.move_arm_safe()
+        # self.move_arm_safe()
         self.move_arm(goal.object_pose)
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)
