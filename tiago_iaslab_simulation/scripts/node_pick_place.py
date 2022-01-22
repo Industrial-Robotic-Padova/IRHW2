@@ -60,6 +60,13 @@ class PickAndPlaceServer(object):
         robot = moveit_commander.RobotCommander()
         move_group = moveit_commander.MoveGroupCommander("arm_torso")
 
+        print("============ Planning frame: %s" % move_group.get_planning_frame())
+        print("============ End effector link: %s" % move_group.get_end_effector_link())
+        print("============ Available Planning Groups:", robot.get_group_names())
+        print("============ Printing robot state")
+        print(robot.get_current_state())
+        print("")
+
         joint_goal = move_group.get_current_joint_values()
         joint_goal[0] = 0
         joint_goal[1] = 1.57
