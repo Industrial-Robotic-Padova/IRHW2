@@ -99,9 +99,6 @@ class PickAndPlaceServer(object):
     #     return result.error_code.val
 
     def move_arm(self, pose_stamped):
-        self.group = None
-        self.object_pose = geometry_msgs.PoseStamped()
-
         moveit_commander.roscpp_initialize(sys.argv)
         robot = moveit_commander.RobotCommander()
         move_group = moveit_commander.MoveGroupCommander("arm_torso")

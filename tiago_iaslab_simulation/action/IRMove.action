@@ -1,5 +1,5 @@
 #goal definition
-int32[] position
+float32[] position
 ---
 #result definition
 int32 status
