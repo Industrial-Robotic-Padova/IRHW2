@@ -20,8 +20,8 @@ def pose_calc(obj_str):
 
 def pose_calc_cyl(obj_str):
     pose_table = list(pose_calc(obj_str))
-    pose_table[1] -= (cylinder_size + robot_size/2)
-    pose_table.append(0.68)
+    pose_table[1] += (cylinder_size + robot_size/2)
+    pose_table.append(-1)
     return tuple(pose_table)
 
 

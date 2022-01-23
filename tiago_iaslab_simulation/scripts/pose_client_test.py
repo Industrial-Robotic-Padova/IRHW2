@@ -91,9 +91,9 @@ if __name__ == '__main__':
                 if obj_pose_stamped.pose.position != float(0):  # check if detected
                     print('FINAL: ', obj_pose_stamped)
                     # pick_obj(obj_pose_stamped)
-                    # break
+                    break
             # pick
-            # send_pose(pose_calc_cyl(str(id_)))
+            send_pose(pose_calc_cyl(str(id_)))
             # put
 
     except rospy.ROSInterruptException:
