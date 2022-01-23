@@ -84,13 +84,13 @@ if __name__ == '__main__':
         for id_ in ids_:
             # Do for each object
             # Check on the table:
-            for angle in [1]:
+            for angle in [3, 1, 4]:
                 # pick_obj(None)
                 send_pose(pose_calc_table(angle=angle))
                 obj_pose_stamped = get_obj_pose(id_)
                 if obj_pose_stamped.pose.position != float(0):  # check if detected
                     print('FINAL: ', obj_pose_stamped)
-                    pick_obj(obj_pose_stamped)
+                    # pick_obj(obj_pose_stamped)
                     break
             # pick
             # send_pose(pose_calc_cyl(str(id_)))

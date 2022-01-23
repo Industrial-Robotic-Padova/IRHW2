@@ -29,15 +29,15 @@ def pose_calc_table(angle):
     pose_table = list(pose_calc('table'))
     if angle == 1:
         pose_table[0] += table_size
-        pose_table.append(-1.57)  # pi/2
+        pose_table.append(3.14)  # pi
     elif angle == 2:
         pose_table[0] -= table_size
-        pose_table.append(1.57)
+        pose_table.append(0)
     elif angle == 3:
         pose_table[1] += table_size
-        pose_table.append(0)
+        pose_table.append(-1.57)
     elif angle == 4:
         pose_table[1] -= table_size
-        pose_table.append(3.14)
+        pose_table.append(1.57)
 
     return tuple(pose_table)
