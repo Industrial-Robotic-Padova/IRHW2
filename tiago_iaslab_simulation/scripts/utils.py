@@ -1,9 +1,7 @@
-positions_ = {
-    'table': (8, -2, -0.68),
-    '1': (10.5, 0.75, -0.9),
-    '2': (11.5, 0.75, -0.9),
-    '3': (12.5, 0.75, -0.9),
-}
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# The coordinates of objects in map
 coords = {
     'base': (-6.580047, 1.369940),
     'table': (1.245143, -1.613171),

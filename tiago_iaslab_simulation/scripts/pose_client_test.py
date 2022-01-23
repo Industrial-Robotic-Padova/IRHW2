@@ -11,6 +11,7 @@ from utils import *
 
 
 def send_pose(pos):
+    # > rostopic pub ir_pose/goal IRMoveActionGoal 8.7 -2.9 -1.57
     client = actionlib.SimpleActionClient('/ir_pose', ir_msg.IRMoveAction)
     client.wait_for_server()
 
