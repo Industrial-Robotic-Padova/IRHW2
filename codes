@@ -1,0 +1,129 @@
+pass bitbucket: gNSJpZCcSuppAnbm6kC6
+pass sepideh:  nnD5AjfFQ7LpmmcuJJCr
+
+git clone https://gkiavash1@bitbucket.org/iaslab-unipd/intelligentrobotics_group_04.git
+
+
+docker pull int2021/intelligent.robotic2021:0.0.4
+docker commit ID_CONTAINER REPOSITORY_NAME:TAG 
+docker commit 4d0bfa71e377 myiaas:0.0.1
+
+rocker --home --user --nvidia --x11 palroboticssl/tiago_tutorials
+rocker --home --user --nvidia --x11 palroboticssl/tiago_tutorials:melodic
+rocker --home --user --nvidia --x11 int2021/intelligent.robotic2021:0.1.1
+rocker --home --user --nvidia --x11 myiaas:1.0.0
+
+
+FROM DOCS:
+rocker --nvidia --x11 deva90/tiago_sim_robotics
+
+
+WHEN ENTER IMAGE:
+terminator -u
+source /tiago_public_ws/devel/setup.bash
+
+roslaunch tiago_gazebo tiago_gazebo.launch public_sim:=true robot:=steel
+
+
+build:
+cd inside package
+catkin build
+
+run launch:
+
+Simulation with empty world
+roslaunch tiago_iaslab_simulation start_simulation.launch world_name:=ias_lab_room_empty
+
+Simulation with all the obstacles
+roslaunch tiago_iaslab_simulation start_simulation.launch world_name:=ias_lab_room_full
+
+Navigation stack (cmd console 2):
+roslaunch tiago_iaslab_simulation navigation.launch
+
+################################# STEPS #######################################################
+
+rocker --home --user --nvidia --x11 palroboticssl/tiago_tutorials:melodic
+
+terminator -u
+source /tiago_public_ws/devel/setup.bash
+
+cd /tiago_public_ws/src/
+
+*****************************************
+sudo git clone https://github.com/Industrial-Robotic-Padova/IRHW2.git
+cd IRHW2/
+sudo git checkout gkiavash/scripts
+*****************************************
+sudo git clone https://github.com/Industrial-Robotic-Padova/IRHW11.git
+cd IRHW11/
+sudo git checkout gkiavash/develop
+*****************************************
+sudo git clone https://gkiavash1@bitbucket.org/iaslab-unipd/intelligentrobotics_group_04.git
+cd intelligentrobotics_group_04/
+sudo git checkout hw2
+*****************************************
+
+################################### apriltag packages ############################################
+cd /tiago_public_ws/src/
+sudo git clone https://github.com/AprilRobotics/apriltag.git
+sudo git clone https://github.com/AprilRobotics/apriltag_ros.git
+sudo git clone https://github.com/pal-robotics/gazebo_ros_link_attacher.git
+
+##################################################################################################
+
+
+################################### CMake problem ################################################
+cd /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/
+
+sudo mv CMakeLists.txt temp.txt
+sudo mv CMakeLists_.txt CMakeLists.txt
+sudo catkin build
+
+source /tiago_public_ws/devel/setup.bash
+sudo mv CMakeLists.txt CMakeLists_.txt
+sudo mv temp.txt CMakeLists.txt
+sudo catkin build tiago_iaslab_simulation --force-cmake
+
+###################################################################################################
+
+source /tiago_public_ws/devel/setup.bash
+roslaunch tiago_iaslab_simulation start_simulation.launch world_name:=ias_lab_room_full_tables
+
+source /tiago_public_ws/devel/setup.bash
+roslaunch tiago_iaslab_simulation navigation.launch
+
+
+rviz
+rosrun tiago_iaslab_simulation send_goal_client.py
+rosrun tiago_iaslab_simulation get_pose_service.py
+
+
+source /tiago_public_ws/devel/setup.bash
+sudo chmod +x /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/scripts/*
+sudo chmod +x /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/src/*
+
+roslaunch tiago_iaslab_simulation HW2.launch
+
+rosrun tiago_iaslab_simulation Human_node
+
+
+##################################### Service ################################################
+rosservice list
+rosservice call /human_objects_srv
+##############################################################################################
+##################################### My node ################################################
+sudo git stash
+sudo git pull
+sudo chmod +x /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/launch/*
+sudo chmod +x /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/scripts/*
+sudo chmod +x /tiago_public_ws/src/IRHW2/tiago_iaslab_simulation/src/*
+roslaunch tiago_iaslab_simulation HW2.launch
+
+##############################################################################################
+sudo catkin build tiago_iaslab_simulation --force-cmake
+rosrun tiago_iaslab_simulation ir_pose_server 0 0 0
+sudo nano scripts/node_detect.py
+##############################################################################################
+
+git commit --amend --reset-author --no-edit --date="$(git log -n 1 --format=%aD)" && git rebase --continue
+
