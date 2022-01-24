@@ -40,9 +40,21 @@ class DetectActionServer:
             result.object_pose.pose = g_detects[goal.object_tag].pose.pose.pose
             result.object_pose.header = g_detects[goal.object_tag].pose.header
             feedback.status = 1
-            print("[DetectActionServer] detect result:", result)
+            # print("[DetectActionServer] detect result:", result)
             result.object_pose = tf_(result.object_pose)
-            print("[DetectActionServer] detect result after transform:", result)
+            # print("[DetectActionServer] detect result after transform:", result)
+
+            obj_poses = []
+            for obj_id in g_detects:
+                obj_pose = PoseStamped()
+                obj_pose.pose = g_detects[obj_id].pose.pose.pose
+                obj_pose.header = g_detects[obj_id].pose.header
+                obj_poses.append(obj_pose)
+
+                result.all_objects_id.append(obj_id)
+            for i in obj_poses:
+                result.all_objects_pose.append(tf_(i))
+
             self.a_server.set_succeeded(result)
         else:
             feedback.status = -1
@@ -73,29 +85,29 @@ def callback_tag(msg):
         print("tag_callback", g_detects.keys())
 
 
-def tf_(aruco_pose):
+def tf_(pose_old):
     def strip_leading_slash(s):
         return s[1:] if s.startswith("/") else s
 
-    aruco_pose.header.frame_id = strip_leading_slash(aruco_pose.header.frame_id)
-    rospy.loginfo("Got: " + str(aruco_pose))
+    pose_old.header.frame_id = strip_leading_slash(pose_old.header.frame_id)
+    rospy.loginfo("Got: " + str(pose_old))
 
-    rospy.loginfo("spherical_grasp_gui: Transforming from frame: " + aruco_pose.header.frame_id + " to 'base_footprint'")
+    rospy.loginfo("spherical_grasp_gui: Transforming from frame: " + pose_old.header.frame_id + " to 'base_footprint'")
     ps = PoseStamped()
-    ps.pose.position = aruco_pose.pose.position
-    ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", aruco_pose.header.frame_id)
-    ps.header.frame_id = aruco_pose.header.frame_id
+    ps.pose.position = pose_old.pose.position
+    ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", pose_old.header.frame_id)
+    ps.header.frame_id = pose_old.header.frame_id
     transform_ok = False
     while not transform_ok and not rospy.is_shutdown():
         try:
             transform = tfBuffer.lookup_transform("base_footprint", ps.header.frame_id, rospy.Time(0))
-            aruco_ps = do_transform_pose(ps, transform)
+            pose_new = do_transform_pose(ps, transform)
             transform_ok = True
         except tf2_ros.ExtrapolationException as e:
             rospy.logwarn("Exception on transforming point... trying again \n(" + str(e) + ")")
             rospy.sleep(0.01)
-            ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", aruco_pose.header.frame_id)
-    return aruco_ps
+            ps.header.stamp = tfBuffer.get_latest_common_time("base_footprint", pose_old.header.frame_id)
+    return pose_new
 
 
 if __name__ == "__main__":

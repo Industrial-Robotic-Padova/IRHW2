@@ -3,6 +3,8 @@ int32 object_tag
 ---
 #result definition
 geometry_msgs/PoseStamped object_pose
+geometry_msgs/PoseStamped[] all_objects_pose
+int32[] all_objects_id
 ---
 #feedback
 int32 status

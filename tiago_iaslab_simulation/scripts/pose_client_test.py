@@ -42,7 +42,7 @@ def get_obj_pose(obj_id):
     goal = ir_msg.IRDetectGoal(object_tag=obj_id)
     client.send_goal(goal, feedback_cb=detect_feedback_callback)
     client.wait_for_result()
-    return client.get_result().object_pose
+    return client.get_result()
 
 
 def pick_obj(obj_pose_stamped):
@@ -81,18 +81,16 @@ if __name__ == '__main__':
         # Robot stand up ....
         prepare_robot()
 
-        for id_ in ids_:
-            # Do for each object
-            # Check on the table:
-            for angle in [3, 1, 4]:
-                # pick_obj(None)
+        for id_ in ids_:  # Do for each object
+            for angle in [3, 1, 4]:  # Check on each side of the table:
                 send_pose(pose_calc_table(angle=angle))
-                obj_pose_stamped = get_obj_pose(id_)
-                if obj_pose_stamped.pose.position != float(0):  # check if detected
-                    print('FINAL: ', obj_pose_stamped)
+
+                res_detect = get_obj_pose(id_)
+                if res_detect.object_pose.pose.position != float(0):  # check if detected
+                    print('FINAL: ', res_detect.object_pose)
                     # pick_obj(obj_pose_stamped)
                     break
-            # pick
+
             send_pose(pose_calc_cyl(str(id_)))
             # put
 
