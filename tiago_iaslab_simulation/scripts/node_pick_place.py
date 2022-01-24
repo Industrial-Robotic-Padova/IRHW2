@@ -111,7 +111,7 @@ class PickAndPlaceServer(object):
             if obj_id == 3:
                 self.scene.add_box("cube", p, (0.05, 0.05, 0.05))
                 continue
-            self.scene.add_mesh(name_to_id[obj_id], p, file, (1, 1, 1))
+            self.scene.add_mesh(name_to_id[obj_id], p.pose, file, (1, 1, 1))
         return self.scene
 
     def move_arm(self, pose_stamped):
