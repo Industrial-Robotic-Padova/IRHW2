@@ -52,7 +52,7 @@ cd /tiago_public_ws/src/
 *****************************************
 sudo git clone https://github.com/Industrial-Robotic-Padova/IRHW2.git
 cd IRHW2/
-sudo git checkout gkiavash/scripts
+sudo git checkout gkiavash/final
 *****************************************
 sudo git clone https://github.com/Industrial-Robotic-Padova/IRHW11.git
 cd IRHW11/

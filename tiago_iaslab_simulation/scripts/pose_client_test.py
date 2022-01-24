@@ -68,7 +68,7 @@ def prepare_robot():
     pose_safe.pose.orientation.z = 0
     pose_safe.pose.orientation.z = 3.14
     pose_safe.pose.orientation.z = -1.57
-    return pick_obj(pose_safe)
+    return pick_obj(pose_safe, [], [])
 
 
 if __name__ == '__main__':
