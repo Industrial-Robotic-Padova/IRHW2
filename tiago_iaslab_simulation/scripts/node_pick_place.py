@@ -62,6 +62,7 @@ class PickAndPlaceServer(object):
         print('goal.all_objects_pose', len(goal.all_objects_pose))
         print('goal.all_objects_id', goal.all_objects_id)
         self.get_scene(goal.all_objects_pose, goal.all_objects_id)
+        print('MOVING...')
         self.move_arm(goal.object_pose)
         p_res = ir_msg.IRPickPlaceResult()
         error_code = 1
@@ -139,6 +140,7 @@ class PickAndPlaceServer(object):
         plan = move_group.go(wait=True)
         move_group.stop()
         move_group.clear_pose_targets()
+        print('Executed...')
 
 
 if __name__ == '__main__':
