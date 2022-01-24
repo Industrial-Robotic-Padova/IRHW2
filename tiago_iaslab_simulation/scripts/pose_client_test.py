@@ -45,11 +45,13 @@ def get_obj_pose(obj_id):
     return client.get_result()
 
 
-def pick_obj(obj_pose_stamped):
+def pick_obj(obj_pose_stamped, all_objects_pose, all_objects_id):
     client = actionlib.SimpleActionClient('/pickup_pose', ir_msg.IRPickPlaceAction)
     client.wait_for_server()
     goal = ir_msg.IRPickPlaceGoal()
     goal.object_pose = obj_pose_stamped
+    goal.all_objects_pose = all_objects_pose
+    goal.all_objects_id = all_objects_id
     client.send_goal(goal)
     client.wait_for_result()
     return client.get_result()

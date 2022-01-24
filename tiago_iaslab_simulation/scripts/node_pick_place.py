@@ -60,7 +60,8 @@ class PickAndPlaceServer(object):
         """
         self.lift_torso()
         self.lower_head()
-        # self.move_arm_safe()
+        print('goal.all_objects_pose', len(goal.all_objects_pose))
+        print('goal.all_objects_id', goal.all_objects_id)
         self.move_arm(goal.object_pose)
         p_res = ir_msg.IRPickPlaceResult()
         # error_code = self.grasp_object(goal.object_pose)
@@ -70,33 +71,6 @@ class PickAndPlaceServer(object):
             self.pick_as.set_aborted(p_res)
         else:
             self.pick_as.set_succeeded(p_res)
-
-    # def grasp_object(self, object_pose):
-    #     rospy.loginfo("Object pose: %s", object_pose.pose)
-    #
-    #     table_pose = copy.deepcopy(object_pose)
-    #
-    #     # define a virtual table below the object
-    #     table_height = object_pose.pose.position.z - self.object_width / 2
-    #     table_width = 1.8
-    #     table_depth = 0.5
-    #     table_pose.pose.position.z += -(2 * self.object_width) / 2 - table_height / 2
-    #     table_height -= 0.008  # remove few milimeters to prevent contact between the object and the table
-    #
-    #     # compute grasps
-    #     possible_grasps = self.sg.create_grasps_from_object_pose(object_pose)
-    #     self.pickup_ac
-    #     goal = createPickupGoal("arm_torso", "part", object_pose, possible_grasps, self.links_to_allow_contact)
-    #
-    #     rospy.loginfo("Sending goal")
-    #     self.pickup_ac.send_goal(goal)
-    #     rospy.loginfo("Waiting for result")
-    #     self.pickup_ac.wait_for_result()
-    #     result = self.pickup_ac.get_result()
-    #     rospy.logdebug("Using torso result: " + str(result))
-    #     rospy.loginfo("Pick result: " + str(moveit_error_dict[result.error_code.val]))
-    #
-    #     return result.error_code.val
 
     def move_arm(self, pose_stamped):
         moveit_commander.roscpp_initialize(sys.argv)
