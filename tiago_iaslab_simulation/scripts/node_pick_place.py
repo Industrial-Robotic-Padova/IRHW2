@@ -79,9 +79,9 @@ class PickAndPlaceServer(object):
 
         p = geometry_msgs.PoseStamped()
         p.header.frame_id = "map"
-        pose_calc = pose_calc('table')
-        p.pose.position.x = pose_calc[0]
-        p.pose.position.y = pose_calc[1]
+        pose_calc_ = pose_calc('table')
+        p.pose.position.x = pose_calc_[0]
+        p.pose.position.y = pose_calc_[1]
         self.scene.add_box("pick_table", p, (0.56, 0.56, 0.04))
 
         name_to_id_cyl = {
