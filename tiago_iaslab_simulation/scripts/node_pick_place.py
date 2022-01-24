@@ -109,7 +109,7 @@ class PickAndPlaceServer(object):
             p.header.frame_id = "base_footprint"
             p.pose = all_objects_pose[obj_id_index]
             if obj_id == 3:
-                self.scene.add_box("cube", p, (0.05, 0.05, 0.05))
+                self.scene.add_box("cube", p.pose, (0.05, 0.05, 0.05))
                 continue
             self.scene.add_mesh(name_to_id[obj_id], p.pose, file, (1, 1, 1))
         return self.scene
