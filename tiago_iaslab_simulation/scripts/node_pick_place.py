@@ -79,7 +79,9 @@ class PickAndPlaceServer(object):
 
         p = geometry_msgs.PoseStamped()
         p.header.frame_id = "map"
-        p.pose = pose_calc('table')
+        pose_calc = pose_calc('table')
+        p.pose.position.x = pose_calc[0]
+        p.pose.position.y = pose_calc[1]
         self.scene.add_box("pick_table", p, (0.56, 0.56, 0.04))
 
         name_to_id_cyl = {
@@ -87,11 +89,11 @@ class PickAndPlaceServer(object):
             2: 'place_table_g',
             3: 'place_table_r',
         }
-        for cyl in name_to_id_cyl.keys():
-            p = geometry_msgs.PoseStamped()
-            p.header.frame_id = "map"
-            p.pose = pose_calc(str(cyl))
-            self.scene.add_cylinder("place_table_g", p, 0.21, 0.69)
+        # for cyl in name_to_id_cyl.keys():
+        #     p = geometry_msgs.PoseStamped()
+        #     p.header.frame_id = "map"
+        #     p.pose = pose_calc(str(cyl))
+        #     self.scene.add_cylinder("place_table_g", p, 0.21, 0.69)
 
         name_to_id = {
             1: 'Hexagon',

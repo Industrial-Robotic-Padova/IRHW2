@@ -90,6 +90,9 @@ if __name__ == '__main__':
                 res_detect = get_obj_pose(id_)
                 if res_detect.object_pose.pose.position != float(0):  # check if detected
                     print('FINAL: ', res_detect.object_pose)
+                    pick_obj(res_detect.object_pose,
+                             res_detect.all_objects_pose,
+                             res_detect.all_objects_id)
                     # pick_obj(obj_pose_stamped)
                     break
 
